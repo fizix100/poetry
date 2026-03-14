@@ -1,0 +1,438 @@
+/* 友林诗文集 - 参考古诗文网/古文岛风格 */
+:root {
+  --bg: #fff;
+  --fg: #333;
+  --muted: #666;
+  --border: #e8e8e8;
+  --accent: #0d7e44;
+  --accent-hover: #0a6b38;
+  --nav-bg: #f5f5f5;
+  --max-width: 900px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "PingFang SC", "Microsoft YaHei", "SimSun", serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--fg);
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+/* 顶部导航 - 参考古诗文网 */
+.site-nav {
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--border);
+}
+.site-nav-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  min-height: 48px;
+}
+.site-nav .logo {
+  font-weight: bold;
+  font-size: 1.15rem;
+  color: var(--fg);
+}
+.site-nav .logo:hover {
+  text-decoration: none;
+  color: var(--accent);
+}
+.site-nav a:not(.logo) {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.site-nav a:not(.logo):hover {
+  color: var(--accent);
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 24px 20px 48px;
+}
+
+/* 首页：左侧浮窗分类 + 右侧滚动全文列表 */
+.home-layout {
+  display: flex;
+  gap: 0;
+  min-height: calc(100vh - 48px);
+  max-width: none;
+  padding: 0;
+}
+.home-sidebar {
+  width: 160px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: calc(100vh - 48px);
+  overflow-y: auto;
+  background: var(--nav-bg);
+  border-right: 1px solid var(--border);
+  padding: 16px 0;
+}
+.home-sidebar-item {
+  display: block;
+  padding: 10px 20px;
+  color: var(--fg);
+  font-size: 0.95rem;
+  border-left: 3px solid transparent;
+}
+.home-sidebar-item:hover {
+  color: var(--accent);
+  text-decoration: none;
+  background: rgba(0,0,0,0.03);
+}
+.home-sidebar-item.active {
+  color: var(--accent);
+  font-weight: 600;
+  border-left-color: var(--accent);
+  background: rgba(13, 126, 68, 0.06);
+}
+.home-sidebar-item .count {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-weight: normal;
+  margin-left: 4px;
+}
+.home-main {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 20px 24px 40px;
+}
+.home-poem-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.home-poem-card {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border);
+}
+.home-poem-card:first-child {
+  padding-top: 0;
+}
+.home-poem-card .card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0 0 6px;
+  color: var(--fg);
+}
+.home-poem-card .card-meta {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.home-poem-card .card-body {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: "SimSun", "Songti SC", "STSong", serif;
+  font-size: 15px;
+  line-height: 2.1;
+  color: #222;
+}
+.home-load-more {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  margin: 28px auto 0;
+  padding: 12px 20px;
+  background: var(--nav-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--fg);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.home-load-more:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.home-load-more:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.home-empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--muted);
+}
+
+/* 首页旧版保留（列表页等仍用 container） */
+.site-header {
+  padding: 28px 0 20px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.site-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin: 0;
+  color: var(--fg);
+}
+.site-desc {
+  margin: 0.4rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.category-list {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 4px;
+}
+.category-card {
+  display: inline-block;
+  padding: 8px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  font-size: 0.95rem;
+  transition: border-color 0.15s, color 0.15s;
+}
+.category-card:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  text-decoration: none;
+}
+.category-card .name {
+  font-weight: 500;
+}
+.category-card .count {
+  margin-left: 6px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: normal;
+}
+
+/* 列表页 - 诗文列表 */
+.list-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.list-header h1 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0;
+}
+.back-link {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.back-link:hover {
+  color: var(--accent);
+}
+
+.sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+.sort-controls label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+.sort-controls input {
+  margin: 0;
+}
+
+.poem-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.poem-list li {
+  margin: 0;
+  border-bottom: 1px solid var(--border);
+}
+.poem-list a {
+  display: block;
+  padding: 14px 0;
+  color: var(--fg);
+}
+.poem-list a:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+.poem-list .title {
+  font-weight: bold;
+  font-size: 1rem;
+}
+.poem-list .date {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* 单篇页 - 参考古诗文网正文版式 */
+.article-header {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.article-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin: 0 0 8px;
+  line-height: 1.4;
+  color: var(--fg);
+}
+.article-meta {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* 正文区 - 古诗文网风格：宋体、行距舒朗 */
+.article-body {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: "SimSun", "Songti SC", "STSong", serif;
+  font-size: 16px;
+  line-height: 2.2;
+  color: #222;
+  margin-bottom: 24px;
+}
+
+/* 正文下方操作栏：复制 等 */
+.article-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.article-actions button,
+.article-actions .btn {
+  padding: 6px 14px;
+  background: var(--nav-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--fg);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.article-actions button:hover,
+.article-actions .btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* 关于页 / 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--muted);
+}
+
+/* 页脚 - 类似古诗文网底部 */
+.site-footer {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+}
+
+a:focus-visible,
+input:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .home-layout {
+    flex-direction: column;
+  }
+  .home-sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+    overflow-y: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 16px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .home-sidebar-item {
+    padding: 6px 12px;
+    border-left: none;
+    border-radius: 4px;
+  }
+  .home-sidebar-item.active {
+    border-left: none;
+    background: rgba(13, 126, 68, 0.12);
+  }
+  .home-main {
+    padding: 16px;
+  }
+  .home-poem-card .card-body {
+    font-size: 14px;
+    line-height: 2;
+  }
+}
+
+@media (max-width: 640px) {
+  .site-nav-inner {
+    flex-wrap: wrap;
+    padding: 10px 16px;
+  }
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .site-title {
+    font-size: 1.35rem;
+  }
+  .category-list {
+    justify-content: flex-start;
+  }
+  .list-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .article-body {
+    font-size: 15px;
+    line-height: 2.1;
+  }
+  .sort-controls {
+    flex-wrap: wrap;
+  }
+}

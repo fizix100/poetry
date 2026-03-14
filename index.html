@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>友林诗文集</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="site-nav">
+    <div class="site-nav-inner">
+      <a href="index.html" class="logo">友林诗文集</a>
+      <a href="index.html">首页</a>
+      <a href="about.html">关于</a>
+    </div>
+  </nav>
+  <div class="home-layout">
+    <aside class="home-sidebar" id="sidebar">
+      <span class="empty-state">加载中…</span>
+    </aside>
+    <main class="home-main">
+      <ul class="home-poem-list" id="poem-list"></ul>
+      <button type="button" class="home-load-more" id="load-more" style="display: none;">加载更多</button>
+      <p class="home-empty" id="empty-msg" style="display: none;">暂无内容</p>
+      <footer class="site-footer" style="margin-top: 32px;">© 友林诗文集</footer>
+    </main>
+  </div>
+  <script src="js/app.js"></script>
+  <script>
+    (function () {
+      const PAGE_SIZE = 20;
+      let data = null;
+      let currentCategory = '';
+      let page = 1;
+      let filteredItems = [];
+
+      function escapeHtml(s) {
+        if (s == null) return '';
+        const div = document.createElement('div');
+        div.textContent = s;
+        return div.innerHTML;
+      }
+
+      function getFiltered() {
+        if (!data) return [];
+        if (!currentCategory) return data.items;
+        return data.items.filter(function (i) { return i.categoryId === currentCategory; });
+      }
+
+      function renderSidebar() {
+        const el = document.getElementById('sidebar');
+        if (!data) return;
+        const categories = data.categories;
+        const total = data.items.length;
+        const allLabel = '全部 <span class="count">' + total + ' 篇</span>';
+        const allActive = currentCategory === '' ? ' active' : '';
+        let html = '<a href="#" class="home-sidebar-item' + allActive + '" data-category="">' + allLabel + '</a>';
+        categories.forEach(function (c) {
+          const count = data.items.filter(function (i) { return i.categoryId === c.id; }).length;
+          const active = currentCategory === c.id ? ' active' : '';
+          html += '<a href="#" class="home-sidebar-item' + active + '" data-category="' + escapeHtml(c.id) + '">' +
+            escapeHtml(c.name) + ' <span class="count">' + count + ' 篇</span></a>';
+        });
+        el.innerHTML = html;
+        el.querySelectorAll('.home-sidebar-item').forEach(function (link) {
+          link.addEventListener('click', function (e) {
+            e.preventDefault();
+            currentCategory = link.getAttribute('data-category') || '';
+            page = 1;
+            filteredItems = getFiltered();
+            renderSidebar();
+            renderList(true);
+          });
+        });
+      }
+
+      function renderList(reset) {
+        const listEl = document.getElementById('poem-list');
+        const loadBtn = document.getElementById('load-more');
+        const emptyEl = document.getElementById('empty-msg');
+        if (reset) page = 1;
+        filteredItems = getFiltered();
+        const toShow = filteredItems.slice(0, page * PAGE_SIZE);
+        const hasMore = toShow.length < filteredItems.length;
+
+        if (filteredItems.length === 0) {
+          listEl.innerHTML = '';
+          loadBtn.style.display = 'none';
+          emptyEl.style.display = 'block';
+          return;
+        }
+        emptyEl.style.display = 'none';
+
+        listEl.innerHTML = toShow.map(function (item) {
+          const dateStr = item.date ? item.date.replace(/\./g, '.') : '';
+          return '<li class="home-poem-card">' +
+            '<h2 class="card-title">' + escapeHtml(item.title) + '</h2>' +
+            (dateStr ? '<p class="card-meta">' + escapeHtml(dateStr) + '</p>' : '') +
+            '<div class="card-body">' + escapeHtml(item.content || '') + '</div>' +
+            '</li>';
+        }).join('');
+
+        if (hasMore) {
+          loadBtn.style.display = 'block';
+          loadBtn.disabled = false;
+          loadBtn.textContent = '加载更多（已显示 ' + toShow.length + ' / ' + filteredItems.length + '）';
+        } else {
+          loadBtn.style.display = 'none';
+        }
+      }
+
+      function loadMore() {
+        page += 1;
+        renderList(false);
+      }
+
+      Youlin.loadData().then(function (d) {
+        data = d;
+        currentCategory = '';
+        page = 1;
+        filteredItems = getFiltered();
+        renderSidebar();
+        renderList(true);
+        document.getElementById('load-more').addEventListener('click', loadMore);
+      }).catch(function () {
+        document.getElementById('sidebar').innerHTML = '<p class="home-empty">无法加载数据</p>';
+      });
+    })();
+  </script>
+</body>
+</html>

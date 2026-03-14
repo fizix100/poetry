@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>关于 - 友林诗文集</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="site-nav">
+    <div class="site-nav-inner">
+      <a href="index.html" class="logo">友林诗文集</a>
+      <a href="index.html">首页</a>
+      <a href="about.html">关于</a>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="list-header">
+      <a href="index.html" class="back-link">← 返回首页</a>
+    </div>
+    <header class="article-header">
+      <h1 class="article-title">关于</h1>
+    </header>
+    <div class="article-body">
+本集收录诗与散文，按「至亲乡情」「四季更迭」「咏物感怀」「寄情山水」「忧国忧民」及「散文」分类，可依类别浏览，列表页支持按时间排序。
+    </div>
+    <p style="margin-top: 1.5rem;" id="self-link"></p>
+  </div>
+  <footer class="site-footer">© 友林诗文集</footer>
+  <script src="js/app.js"></script>
+  <script>
+    Youlin.loadData().then(function (data) {
+      const item = data.items.find(function (i) { return i.title === '自述'; });
+      const el = document.getElementById('self-link');
+      if (item) el.innerHTML = '<a href="item.html?id=' + encodeURIComponent(item.id) + '">阅读《自述》</a>';
+    });
+  </script>
+</body>
+</html>

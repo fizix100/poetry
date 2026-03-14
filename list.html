@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>友林诗文集 - 列表</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="site-nav">
+    <div class="site-nav-inner">
+      <a href="index.html" class="logo">友林诗文集</a>
+      <a href="index.html">首页</a>
+      <a href="about.html">关于</a>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="list-header">
+      <div>
+        <a href="index.html" class="back-link">← 返回首页</a>
+        <h1 id="page-title">诗文</h1>
+      </div>
+      <div class="sort-controls">
+        <label><input type="radio" name="sort" value="default" checked> 默认顺序</label>
+        <label><input type="radio" name="sort" value="time-asc"> 时间从早到晚</label>
+        <label><input type="radio" name="sort" value="time-desc"> 时间从晚到早</label>
+      </div>
+    </div>
+    <ul class="poem-list" id="poem-list"></ul>
+  </div>
+  <footer class="site-footer">© 友林诗文集</footer>
+  <script src="js/app.js"></script>
+  <script>
+    (function () {
+      const categoryId = Youlin.getCategoryIdFromQuery();
+      const listEl = document.getElementById('poem-list');
+      const titleEl = document.getElementById('page-title');
+
+      function escapeHtml(s) {
+        const div = document.createElement('div');
+        div.textContent = s;
+        return div.innerHTML;
+      }
+
+      function renderList(items) {
+        if (!items.length) {
+          listEl.innerHTML = '<li class="empty-state">暂无内容</li>';
+          return;
+        }
+        listEl.innerHTML = items.map(function (item) {
+          const dateStr = item.date ? item.date.replace(/\./g, '.') : '';
+          return '<li><a href="item.html?id=' + encodeURIComponent(item.id) + '">' +
+            '<span class="title">' + escapeHtml(item.title) + '</span>' +
+            (dateStr ? '<span class="date">' + escapeHtml(dateStr) + '</span>' : '') +
+            '</a></li>';
+        }).join('');
+      }
+
+      Youlin.loadData().then(function (data) {
+        const cat = data.categories.find(function (c) { return c.id === categoryId; });
+        titleEl.textContent = cat ? cat.name : '诗文';
+        let items = data.items.filter(function (i) { return i.categoryId === categoryId; });
+
+        function applySort() {
+          const sort = document.querySelector('input[name="sort"]:checked').value;
+          let list = items;
+          if (sort === 'time-asc') list = Youlin.sortByTime(items, 'asc');
+          else if (sort === 'time-desc') list = Youlin.sortByTime(items, 'desc');
+          renderList(list);
+        }
+
+        document.querySelectorAll('input[name="sort"]').forEach(function (radio) {
+          radio.addEventListener('change', applySort);
+        });
+
+        applySort();
+      }).catch(function () {
+        titleEl.textContent = '诗文';
+        listEl.innerHTML = '<li class="empty-state">无法加载数据</li>';
+      });
+    })();
+  </script>
+</body>
+</html>
