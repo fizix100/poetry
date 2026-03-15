@@ -1,13 +1,20 @@
-/* 友林诗文集 - 参考古诗文网/古文岛风格 */
+/* 友林诗文集 - 雅致诗文风格，适度装饰 */
 :root {
-  --bg: #fff;
-  --fg: #333;
-  --muted: #666;
-  --border: #e8e8e8;
+  --bg: #faf8f5;
+  --bg-card: #fff;
+  --fg: #2c2c2c;
+  --muted: #5c5c5c;
+  --border: #e5e0d8;
   --accent: #0d7e44;
   --accent-hover: #0a6b38;
-  --nav-bg: #f5f5f5;
+  --accent-soft: rgba(13, 126, 68, 0.08);
+  --nav-bg: linear-gradient(180deg, #f0ede8 0%, #e8e5df 100%);
+  --nav-border: #ddd8d0;
+  --gold: #8b7355;
+  --gold-soft: rgba(139, 115, 85, 0.15);
   --max-width: 900px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 * {
@@ -16,12 +23,15 @@
 
 body {
   margin: 0;
-  font-family: "PingFang SC", "Microsoft YaHei", "SimSun", serif;
+  font-family: "PingFang SC", "Microsoft YaHei", "SimSun", "Songti SC", serif;
   font-size: 14px;
   line-height: 1.6;
   color: var(--fg);
   background: var(--bg);
   min-height: 100vh;
+  background-image:
+    linear-gradient(180deg, rgba(250, 248, 245, 0.97) 0%, var(--bg) 100%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L30 60M0 30L60 30' stroke='%23e8e4de' stroke-width='0.5' fill='none'/%3E%3C/svg%3E");
 }
 
 a {
@@ -33,10 +43,11 @@ a:hover {
   text-decoration: underline;
 }
 
-/* 顶部导航 - 参考古诗文网 */
+/* 顶部导航 - 雅致分隔线 */
 .site-nav {
   background: var(--nav-bg);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--nav-border);
+  box-shadow: var(--shadow-sm);
 }
 .site-nav-inner {
   max-width: var(--max-width);
@@ -45,16 +56,33 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  min-height: 48px;
+  min-height: 52px;
 }
 .site-nav .logo {
   font-weight: bold;
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   color: var(--fg);
+  letter-spacing: 0.02em;
+  position: relative;
+  padding-bottom: 2px;
+}
+.site-nav .logo::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--gold) 100%);
+  opacity: 0.7;
+  border-radius: 1px;
 }
 .site-nav .logo:hover {
   text-decoration: none;
   color: var(--accent);
+}
+.site-nav .logo:hover::after {
+  opacity: 1;
 }
 .site-nav a:not(.logo) {
   color: var(--muted);
@@ -74,20 +102,21 @@ a:hover {
 .home-layout {
   display: flex;
   gap: 0;
-  min-height: calc(100vh - 48px);
+  min-height: calc(100vh - 52px);
   max-width: none;
   padding: 0;
 }
 .home-sidebar {
-  width: 160px;
+  width: 168px;
   flex-shrink: 0;
   position: sticky;
   top: 0;
-  height: calc(100vh - 48px);
+  height: calc(100vh - 52px);
   overflow-y: auto;
-  background: var(--nav-bg);
+  background: linear-gradient(180deg, #f5f3ef 0%, #ebe8e3 100%);
   border-right: 1px solid var(--border);
-  padding: 16px 0;
+  padding: 20px 0;
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.03);
 }
 .home-sidebar-item {
   display: block;
@@ -95,17 +124,20 @@ a:hover {
   color: var(--fg);
   font-size: 0.95rem;
   border-left: 3px solid transparent;
+  margin: 2px 0;
+  transition: background 0.2s, border-color 0.2s;
 }
 .home-sidebar-item:hover {
   color: var(--accent);
   text-decoration: none;
-  background: rgba(0,0,0,0.03);
+  background: var(--accent-soft);
 }
 .home-sidebar-item.active {
   color: var(--accent);
   font-weight: 600;
   border-left-color: var(--accent);
-  background: rgba(13, 126, 68, 0.06);
+  background: var(--accent-soft);
+  box-shadow: inset 0 0 0 1px rgba(13, 126, 68, 0.06);
 }
 .home-sidebar-item .count {
   font-size: 0.8rem;
@@ -117,7 +149,7 @@ a:hover {
   flex: 1;
   min-width: 0;
   overflow-y: auto;
-  padding: 20px 24px 40px;
+  padding: 24px 28px 48px;
 }
 .home-poem-list {
   list-style: none;
@@ -125,22 +157,46 @@ a:hover {
   margin: 0;
 }
 .home-poem-card {
-  padding: 24px 0;
-  border-bottom: 1px solid var(--border);
+  padding: 22px 24px;
+  margin-bottom: 16px;
+  background: var(--bg-card);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+  position: relative;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.home-poem-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--gold) 100%);
+  border-radius: 4px 0 0 4px;
+  opacity: 0.8;
+}
+.home-poem-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border-color: #ddd5cc;
 }
 .home-poem-card:first-child {
-  padding-top: 0;
+  margin-top: 0;
 }
 .home-poem-card .card-title {
-  font-size: 1.2rem;
+  font-size: 1.22rem;
   font-weight: bold;
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   color: var(--fg);
+  letter-spacing: 0.02em;
 }
 .home-poem-card .card-meta {
   font-size: 0.85rem;
   color: var(--muted);
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--border);
 }
 .home-poem-card .card-body {
   white-space: pre-wrap;
@@ -148,24 +204,27 @@ a:hover {
   font-family: "SimSun", "Songti SC", "STSong", serif;
   font-size: 15px;
   line-height: 2.1;
-  color: #222;
+  color: #2a2a2a;
 }
 .home-load-more {
   display: block;
   width: 100%;
   max-width: 280px;
-  margin: 28px auto 0;
+  margin: 32px auto 0;
   padding: 12px 20px;
-  background: var(--nav-bg);
+  background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 6px;
   color: var(--fg);
   font-size: 0.95rem;
   cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
 }
 .home-load-more:hover {
   border-color: var(--accent);
   color: var(--accent);
+  box-shadow: 0 2px 8px var(--accent-soft);
 }
 .home-load-more:disabled {
   opacity: 0.6;
@@ -202,17 +261,20 @@ a:hover {
 }
 .category-card {
   display: inline-block;
-  padding: 8px 16px;
-  background: var(--bg);
+  padding: 10px 18px;
+  background: var(--bg-card);
   border: 1px solid var(--border);
   color: var(--fg);
   font-size: 0.95rem;
-  transition: border-color 0.15s, color 0.15s;
+  border-radius: 6px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
 }
 .category-card:hover {
   border-color: var(--accent);
   color: var(--accent);
   text-decoration: none;
+  box-shadow: 0 2px 8px var(--accent-soft);
 }
 .category-card .name {
   font-weight: 500;
@@ -231,14 +293,18 @@ a:hover {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
 }
 .list-header h1 {
   font-size: 1.2rem;
   font-weight: bold;
   margin: 0;
+  color: var(--fg);
 }
 .back-link {
   font-size: 0.9rem;
@@ -271,17 +337,23 @@ a:hover {
   margin: 0;
 }
 .poem-list li {
-  margin: 0;
-  border-bottom: 1px solid var(--border);
+  margin: 0 0 8px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-sm);
 }
 .poem-list a {
   display: block;
-  padding: 14px 0;
+  padding: 14px 18px;
   color: var(--fg);
+  transition: background 0.2s, color 0.2s;
 }
 .poem-list a:hover {
   color: var(--accent);
   text-decoration: none;
+  background: var(--accent-soft);
 }
 .poem-list .title {
   font-weight: bold;
@@ -293,33 +365,43 @@ a:hover {
   margin-top: 4px;
 }
 
-/* 单篇页 - 参考古诗文网正文版式 */
+/* 单篇页 - 雅致正文版式 */
 .article-header {
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+  padding: 20px 24px;
+  background: var(--bg-card);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid var(--accent);
 }
 .article-title {
-  font-size: 1.4rem;
+  font-size: 1.45rem;
   font-weight: bold;
   margin: 0 0 8px;
   line-height: 1.4;
   color: var(--fg);
+  letter-spacing: 0.02em;
 }
 .article-meta {
   font-size: 0.9rem;
   color: var(--muted);
 }
 
-/* 正文区 - 古诗文网风格：宋体、行距舒朗 */
+/* 正文区 - 宋体、行距舒朗，带卡片感 */
 .article-body {
   white-space: pre-wrap;
   word-break: break-word;
   font-family: "SimSun", "Songti SC", "STSong", serif;
   font-size: 16px;
   line-height: 2.2;
-  color: #222;
-  margin-bottom: 24px;
+  color: #2a2a2a;
+  margin-bottom: 28px;
+  padding: 24px 28px;
+  background: var(--bg-card);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
 }
 
 /* 正文下方操作栏：复制 等 */
@@ -334,36 +416,53 @@ a:hover {
 }
 .article-actions button,
 .article-actions .btn {
-  padding: 6px 14px;
-  background: var(--nav-bg);
+  padding: 8px 16px;
+  background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 6px;
   color: var(--fg);
   cursor: pointer;
   font-size: 0.9rem;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
 }
 .article-actions button:hover,
 .article-actions .btn:hover {
   border-color: var(--accent);
   color: var(--accent);
+  box-shadow: 0 2px 6px var(--accent-soft);
 }
 
 /* 关于页 / 空状态 */
 .empty-state {
   text-align: center;
-  padding: 48px 20px;
+  padding: 48px 24px;
   color: var(--muted);
+  background: var(--bg-card);
+  border-radius: 8px;
+  border: 1px dashed var(--border);
 }
 
-/* 页脚 - 类似古诗文网底部 */
+/* 页脚 - 雅致分隔 */
 .site-footer {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 20px;
+  padding: 24px 20px;
   text-align: center;
   font-size: 0.85rem;
   color: var(--muted);
   border-top: 1px solid var(--border);
+  background: linear-gradient(0deg, rgba(245, 243, 239, 0.6) 0%, transparent 100%);
+}
+.site-footer::before {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 2px;
+  margin: 0 auto 16px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0.5;
+  border-radius: 1px;
 }
 
 a:focus-visible,
