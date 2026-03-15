@@ -10,7 +10,6 @@
   <nav class="site-nav">
     <div class="site-nav-inner">
       <a href="index.html" class="logo">友林诗文集</a>
-      <a href="index.html">首页</a>
       <a href="about.html">关于</a>
     </div>
   </nav>
@@ -43,8 +42,8 @@
 
       function getFiltered() {
         if (!data) return [];
-        if (!currentCategory) return data.items;
-        return data.items.filter(function (i) { return i.categoryId === currentCategory; });
+        var raw = !currentCategory ? data.items : data.items.filter(function (i) { return i.categoryId === currentCategory; });
+        return Youlin.sortByTime(raw, 'asc');
       }
 
       function renderSidebar() {
