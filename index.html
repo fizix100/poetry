@@ -9,14 +9,25 @@
 <body>
   <nav class="site-nav">
     <div class="site-nav-inner">
-      <a href="index.html" class="logo">友林诗文集</a>
-      <a href="about.html">关于</a>
+      <div class="site-nav-scroll" id="nav-categories">
+        <a href="#" class="nav-cat active" data-category="">全部</a>
+        <a href="#" class="nav-cat" data-category="zhiqin">至亲乡情</a>
+        <a href="#" class="nav-cat" data-category="siji">四季更迭</a>
+        <a href="#" class="nav-cat" data-category="yongwu">咏物感怀</a>
+        <a href="#" class="nav-cat" data-category="jishan">寄情山水</a>
+        <a href="#" class="nav-cat" data-category="youguo">忧国忧民</a>
+        <a href="#" class="nav-cat" data-category="sanwen">散文</a>
+        <div class="nav-year-wrap">
+          <label class="nav-year-label">年份</label>
+          <select class="nav-year-select" id="year-select" aria-label="按年份筛选">
+            <option value="">全部年份</option>
+          </select>
+        </div>
+      </div>
+      <a href="about.html" class="nav-about">关于</a>
     </div>
   </nav>
   <div class="home-layout">
-    <aside class="home-sidebar" id="sidebar">
-      <span class="empty-state">加载中…</span>
-    </aside>
     <main class="home-main">
       <ul class="home-poem-list" id="poem-list"></ul>
       <button type="button" class="home-load-more" id="load-more" style="display: none;">加载更多</button>
@@ -30,6 +41,7 @@
       const PAGE_SIZE = 20;
       let data = null;
       let currentCategory = '';
+      let selectedYear = '';
       let page = 1;
       let filteredItems = [];
 
@@ -43,33 +55,67 @@
       function getFiltered() {
         if (!data) return [];
         var raw = !currentCategory ? data.items : data.items.filter(function (i) { return i.categoryId === currentCategory; });
+        if (selectedYear) {
+          raw = raw.filter(function (i) { return i.date && String(i.date).indexOf(selectedYear) === 0; });
+        }
         return Youlin.sortByTime(raw, 'asc');
       }
 
-      function renderSidebar() {
-        const el = document.getElementById('sidebar');
-        if (!data) return;
-        const categories = data.categories;
-        const total = data.items.length;
-        const allLabel = '全部 <span class="count">' + total + ' 篇</span>';
-        const allActive = currentCategory === '' ? ' active' : '';
-        let html = '<a href="#" class="home-sidebar-item' + allActive + '" data-category="">' + allLabel + '</a>';
-        categories.forEach(function (c) {
-          const count = data.items.filter(function (i) { return i.categoryId === c.id; }).length;
-          const active = currentCategory === c.id ? ' active' : '';
-          html += '<a href="#" class="home-sidebar-item' + active + '" data-category="' + escapeHtml(c.id) + '">' +
-            escapeHtml(c.name) + ' <span class="count">' + count + ' 篇</span></a>';
+      function getYears() {
+        if (!data) return [];
+        var years = {};
+        data.items.forEach(function (i) {
+          if (i.date && i.date.length >= 4) {
+            years[i.date.substring(0, 4)] = true;
+          }
         });
-        el.innerHTML = html;
-        el.querySelectorAll('.home-sidebar-item').forEach(function (link) {
+        return Object.keys(years).sort(function (a, b) { return Number(b) - Number(a); });
+      }
+
+      function renderNavCategories() {
+        if (!data) return;
+        var total = data.items.length;
+        var cats = document.querySelectorAll('#nav-categories .nav-cat');
+        cats.forEach(function (a) {
+          var id = a.getAttribute('data-category') || '';
+          a.classList.toggle('active', currentCategory === id);
+          var countEl = a.querySelector('.nav-cat-count');
+          if (countEl) countEl.remove();
+          var count = id ? data.items.filter(function (i) { return i.categoryId === id; }).length : total;
+          var span = document.createElement('span');
+          span.className = 'nav-cat-count';
+          span.textContent = ' ' + count + ' 篇';
+          a.appendChild(span);
+        });
+      }
+
+      function bindNavCategories() {
+        document.querySelectorAll('#nav-categories .nav-cat').forEach(function (link) {
           link.addEventListener('click', function (e) {
             e.preventDefault();
             currentCategory = link.getAttribute('data-category') || '';
             page = 1;
             filteredItems = getFiltered();
-            renderSidebar();
+            renderNavCategories();
             renderList(true);
           });
+        });
+      }
+
+      function renderYearSelect() {
+        var sel = document.getElementById('year-select');
+        if (!sel) return;
+        var years = getYears();
+        sel.innerHTML = '<option value="">全部年份</option>' +
+          years.map(function (y) {
+            return '<option value="' + escapeHtml(y) + '"' + (selectedYear === y ? ' selected' : '') + '>' + escapeHtml(y) + ' 年</option>';
+          }).join('');
+        sel.addEventListener('change', function () {
+          selectedYear = (sel.value || '').trim();
+          page = 1;
+          filteredItems = getFiltered();
+          renderNavCategories();
+          renderList(true);
         });
       }
 
@@ -113,16 +159,30 @@
         renderList(false);
       }
 
+      function initFromUrl() {
+        var params = new URLSearchParams(location.search);
+        var c = params.get('category') || '';
+        if (c && data && data.categories.some(function (x) { return x.id === c; })) {
+          currentCategory = c;
+        }
+      }
+
       Youlin.loadData().then(function (d) {
         data = d;
         currentCategory = '';
+        selectedYear = '';
         page = 1;
+        initFromUrl();
         filteredItems = getFiltered();
-        renderSidebar();
+        renderNavCategories();
+        bindNavCategories();
+        renderYearSelect();
         renderList(true);
         document.getElementById('load-more').addEventListener('click', loadMore);
       }).catch(function () {
-        document.getElementById('sidebar').innerHTML = '<p class="home-empty">无法加载数据</p>';
+        document.getElementById('poem-list').innerHTML = '';
+        document.getElementById('empty-msg').style.display = 'block';
+        document.getElementById('empty-msg').textContent = '无法加载数据';
       });
     })();
   </script>
